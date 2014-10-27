@@ -27,10 +27,10 @@
 				</div>
 				<div class="col-sm-6">
 
-					<form class="search-form form-inline pull-right" role="form" action="/">
+					<form class="search-form form-inline pull-right" role="form" action="/{{language}}/">
 						<div class="form-group">
-							<label class="sr-only" for="search">Search</label>
-							<input type="search" class="form-control" name="search" id="search" size="30" value="{{search}}" placeholder="Search">
+							<label class="sr-only" for="search">{{#language_et}}Otsi{{/language_et}}{{^language_et}}Search{{/language_et}}</label>
+							<input type="search" class="form-control" name="search" id="search" size="30" value="{{search}}" placeholder="{{#language_et}}Otsi{{/language_et}}{{^language_et}}Search{{/language_et}}">
 						</div>
 					</form>
 

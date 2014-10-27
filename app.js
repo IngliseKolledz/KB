@@ -34,32 +34,64 @@ extend(raneto.config, config);
 
 // Handle all requests
 app.all('*', function(req, res, next) {
+    var language = 'et';
+
+    if (req.params && req.params[0]) {
+        if (req.params[0].substring(0, 3) === 'en/') {
+            language = 'en';
+        }
+    }
+
+    console.log('REQ PARAMS', req.params, 'search', req.query.search);
+
     if(req.query.search){
         var searchQuery = validator.toString(validator.escape(_s.stripTags(req.query.search))).trim(),
-            searchResults = raneto.doSearch(searchQuery),
+            searchResults = raneto.doSearch(searchQuery, language),
             pageListSearch = raneto.getPages('');
+        
+        language = 'et';
 
         return res.render('search', {
             config: config,
             pages: pageListSearch,
             search: searchQuery,
             searchResults: searchResults,
-            body_class: 'page-search'
+            body_class: 'page-search',
+            language: language,
+            language_et: language === 'et',
         });
     }
     else if(req.params[0]){
-        var slug = req.params[0];
+        var slug = req.params[0],
+            is_index = false;
+
         if(slug == '/') slug = '/index';
 
-        var pageList = raneto.getPages(slug),
+        console.log('slug', slug);
+
+        is_index = (slug == '/index' || slug == ('/' + language + '/'));
+
+        var pageList = raneto.getPages(slug, language),
             filePath = path.normalize(raneto.config.content_dir + slug);
+
+        console.log('filePath', filePath);
+
         if(!fs.existsSync(filePath)) filePath += '.md';
 
-        if(slug == '/index' && !fs.existsSync(filePath)){
+        console.log('filePath 2', filePath);
+        console.log('slug 2', slug);
+        console.log('language', language);
+
+        // if((slug == '/index' || slug == ('/' + language + '/')) && !fs.existsSync(filePath)){
+        if (is_index) {
+            console.log('render home');
+
             return res.render('home', {
                 config: config,
                 pages: pageList,
-                body_class: 'page-home'
+                body_class: 'page-home',
+                language: language,
+                language_et: language === 'et',
             });
         } else {
             fs.readFile(filePath, 'utf8', function(err, content) {
@@ -87,7 +119,9 @@ app.all('*', function(req, res, next) {
                         meta: meta,
                         content: html,
                         body_class: 'page-'+ raneto.cleanString(slug),
-                        last_modified: moment(stat.mtime).format('Do MMM YYYY')
+                        last_modified: moment(stat.mtime).format('Do MMM YYYY'),
+                        language: language,
+                        language_et: language === 'et',
                     });
                 } else {
                     // Serve static file

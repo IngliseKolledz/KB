@@ -1,12 +1,12 @@
 .header {
-    background: #2C323D;
-    color: #ccc;
+    color: #fff;
+    background: #2C323D url('../images/header.jpg') no-repeat 50% 50%;
 }
 .header .container-fluid {
     padding-top: 20px;
     padding-bottom: 20px;
 }
-.header a { color: #ddd; }
+.header a { color: #fafafa; }
 .header a:hover {
     color: #fff;
     text-decoration: none;

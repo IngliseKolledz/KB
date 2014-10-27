@@ -30,7 +30,9 @@ var config = {
 	content_dir: './content/',
 
 	// Add your analytics tracking code (including script tags)
-	analytics: ""
+	analytics: "",
+
+	debug: true,
 
 };
 
